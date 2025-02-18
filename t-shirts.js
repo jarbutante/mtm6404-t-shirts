@@ -62,4 +62,57 @@ const tshirts = [
     stock: 2,
     quantity: 1
   }
-]
+];
+
+const tshirtCards = document.querySelectorAll(".card");
+
+  tshirtCards.forEach((card, index) => {
+    const stockText = card.querySelector("p.text-muted-foreground");
+    const selectBox = card.querySelector("select");
+    const buyButton = card.querySelector("button");
+
+    // Update stock display
+    if (tshirts[index].stock === 0) {
+      stockText.textContent = "Out of Stock";
+      stockText.classList.add("text-danger");
+      buyButton.disabled = true;
+      selectBox.disabled = true;
+    } else {
+      stockText.textContent = `${tshirts[index].stock} left!`;
+      selectBox.innerHTML = "";
+      for (let i = 1; i <= tshirts[index].stock; i++) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        selectBox.appendChild(option);
+      }
+    }
+
+    // Buy button event listener
+    buyButton.addEventListener("click", function () {
+      const selectedQuantity = parseInt(selectBox.value);
+
+      // Decrease stock by the selected quantity
+      tshirts[index].stock -= selectedQuantity;
+
+      // Check if stock is now 0
+      if (tshirts[index].stock <= 0) {
+        tshirts[index].stock = 0;
+        stockText.textContent = "Out of Stock";
+        stockText.classList.add("text-danger");
+        buyButton.disabled = true;
+        selectBox.disabled = true;
+      } else {
+        stockText.textContent = `${tshirts[index].stock} left!`;
+
+        // Update select options
+        selectBox.innerHTML = "";
+        for (let i = 1; i <= tshirts[index].stock; i++) {
+          const option = document.createElement("option");
+          option.value = i;
+          option.textContent = i;
+          selectBox.appendChild(option);
+        }
+      }
+    });
+  });
