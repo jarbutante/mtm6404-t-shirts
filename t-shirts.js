@@ -64,34 +64,27 @@ const tshirts = [
   }
 ];
 
-// Component that renders individual t-shirt cards with functionality to select quantity, 
-// display price, stock status, and update stock when "Buy" is clicked.
 function TshirtCard({ tshirt, index, updateStock }) {
-  const [stock, setStock] = React.useState(tshirt.stock); // State to manage stock value
-  const [selectedQuantity, setSelectedQuantity] = React.useState(1); // State for selected quantity
+  const [stock, setStock] = React.useState(tshirt.stock);
+  const [selectedQuantity, setSelectedQuantity] = React.useState(1);
 
-  // Effect hook to update stock when tshirt data changes
   React.useEffect(() => {
     setStock(tshirt.stock);
   }, [tshirt]);
 
   const handleSelectChange = (event) => {
-    // Update the selected quantity based on user input
     setSelectedQuantity(parseInt(event.target.value));
   };
 
   const handleBuyClick = () => {
-    // Check if the stock is sufficient for the selected quantity, then update stock
     if (stock >= selectedQuantity) {
       const newStock = stock - selectedQuantity;
       setStock(newStock);
-      updateStock(index, newStock); // Call to update the stock in the parent component
+      updateStock(index, newStock);
     }
   };
 
   return (
-   
-    // <div className="col-12 col-md-4 col-lg-3 mb-4">
     <div className="col-12 col-md-4 col-lg-4 mb-4">
       <div className="card shadow-sm">
         <img src={tshirt.image} alt={tshirt.title} className="card-img-top" />
@@ -99,13 +92,13 @@ function TshirtCard({ tshirt, index, updateStock }) {
           <h5 className="card-title">{tshirt.title}</h5>
           <p className="card-price">Price: ${tshirt.price.toFixed(2)}</p>
           <p className={`card-stock ${stock === 0 ? 'text-danger' : ''}`}>
-            {stock === 0 ? 'Out of Stock' : `${stock} left!`} {/* Display stock status */}
+            {stock === 0 ? 'Out of Stock' : `${stock} left!`}
           </p>
           <select
             value={selectedQuantity}
             onChange={handleSelectChange}
             className="form-select"
-            disabled={stock === 0} // Disable the select dropdown if the item is out of stock
+            disabled={stock === 0}
           >
             {[...Array(stock).keys()].map(i => (
               <option key={i} value={i + 1}>{i + 1}</option>
@@ -116,9 +109,9 @@ function TshirtCard({ tshirt, index, updateStock }) {
             <button
               className="btn btn-primary"
               onClick={handleBuyClick}
-              disabled={stock === 0} // Disable the button if out of stock
+              disabled={stock === 0}
             >
-              {stock === 0 ? 'Out of Stock' : 'Buy'} {/* Button text based on stock */}
+              {stock === 0 ? 'Out of Stock' : 'Buy'}
             </button>
           </div>
         </div>
@@ -127,15 +120,13 @@ function TshirtCard({ tshirt, index, updateStock }) {
   );
 }
 
-// Component that renders the list of t-shirt cards and manages stock updates
 function TshirtList() {
-  const [tshirtList, setTshirtList] = React.useState(tshirts); // State to manage list of tshirts
+  const [tshirtList, setTshirtList] = React.useState(tshirts);
 
-  // Function to update stock of a t-shirt based on user interaction
   const updateStock = (index, newStock) => {
     const updatedTshirts = [...tshirtList];
     updatedTshirts[index].stock = newStock;
-    setTshirtList(updatedTshirts); // Update the state with the new stock
+    setTshirtList(updatedTshirts);
   };
 
   return (
@@ -146,13 +137,12 @@ function TshirtList() {
           key={index}
           tshirt={tshirt}
           index={index}
-          updateStock={updateStock} // Pass updateStock function as a prop
+          updateStock={updateStock}
         />
       ))}
     </div>
   );
 }
 
-// Rendering the TshirtList component into the DOM
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<TshirtList />);
